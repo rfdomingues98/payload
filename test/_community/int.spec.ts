@@ -2,6 +2,7 @@ import payload from '../../packages/payload/src'
 import { devUser } from '../credentials'
 import { initPayloadTest } from '../helpers/configHelpers'
 import { postsSlug } from './collections/Posts'
+import { testsSlug } from './collections/Test'
 
 require('isomorphic-fetch')
 
@@ -68,5 +69,36 @@ describe('_Community Tests', () => {
     }).then((res) => res.json())
 
     expect(newPost.doc.text).toEqual('REST API EXAMPLE')
+  })
+
+  it('add localized text entry to versioned collection', async () => {
+    const newEntry = await fetch(`${apiUrl}/${testsSlug}`, {
+      method: 'POST',
+      headers: { ...headers, Authorization: `JWT ${jwt}` },
+      body: JSON.stringify({
+        text: 'Localized text entry',
+      }),
+    }).then((res) => res.json())
+
+    expect(newEntry.doc.text).toEqual('Localized text entry')
+  })
+
+  it('add localized array entry to versioned collection', async () => {
+    const newEntry = await fetch(`${apiUrl}/${testsSlug}`, {
+      method: 'POST',
+      headers: { ...headers, Authorization: `JWT ${jwt}` },
+      body: JSON.stringify({
+        items: [
+          {
+            text: 'Localized array entry',
+          },
+        ],
+      }),
+    }).then((res) => res.json())
+
+    expect(newEntry.doc).toBeDefined()
+    expect(newEntry.doc).toHaveProperty('items')
+    expect(newEntry.doc.items).toHaveLength(1)
+    expect(newEntry.doc.items[0].text).toEqual('Localized array entry')
   })
 })
