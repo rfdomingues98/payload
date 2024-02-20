@@ -1,7 +1,6 @@
 import payload from '../../packages/payload/src'
 import { devUser } from '../credentials'
 import { initPayloadTest } from '../helpers/configHelpers'
-import { postsSlug } from './collections/Posts'
 
 require('isomorphic-fetch')
 
@@ -44,7 +43,7 @@ describe('_Community Tests', () => {
   // use the tests below as a guide
   // --__--__--__--__--__--__--__--__--__
 
-  it('local API example', async () => {
+  /* it('local API example', async () => {
     const newPost = await payload.create({
       collection: postsSlug,
       data: {
@@ -68,5 +67,28 @@ describe('_Community Tests', () => {
     }).then((res) => res.json())
 
     expect(newPost.doc.text).toEqual('REST API EXAMPLE')
+  }) */
+
+  it('test adding new entry', async () => {
+    const testData = {
+      block: [
+        {
+          type: 'highImpact',
+          blockType: 'hero',
+          link: {
+            type: 'reference',
+          },
+        },
+      ],
+    }
+
+    const newEntry = await payload.create({
+      collection: 'test',
+      data: testData,
+    })
+
+    expect(newEntry).toBeDefined()
+    expect(newEntry.block[0].type).toEqual('highImpact')
+    expect(newEntry.block[0].link.type).toEqual('reference')
   })
 })
