@@ -1,6 +1,8 @@
+import { postgresAdapter } from '../../packages/db-postgres/src'
 import { buildConfigWithDefaults } from '../buildConfigWithDefaults'
 import { devUser } from '../credentials'
 import { MediaCollection } from './collections/Media'
+import { Pages } from './collections/Pages'
 import { PostsCollection, postsSlug } from './collections/Posts'
 import { MenuGlobal } from './globals/Menu'
 
@@ -9,6 +11,7 @@ export default buildConfigWithDefaults({
   collections: [
     PostsCollection,
     MediaCollection,
+    Pages,
     // ...add more collections here
   ],
   globals: [
@@ -18,6 +21,12 @@ export default buildConfigWithDefaults({
   graphQL: {
     schemaOutputFile: './test/_community/schema.graphql',
   },
+
+  db: postgresAdapter({
+    pool: {
+      connectionString: process.env.DATABASE_URI,
+    },
+  }),
 
   onInit: async (payload) => {
     await payload.create({
